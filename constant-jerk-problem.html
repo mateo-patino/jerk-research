@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Problem of Constant Jerk</title>
+        <link rel="stylesheet" href="styles.css" media="all"> 
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet"> <!--For Open Sans and Roboto-->
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--For LaTeX formatting-->
+    </head>
+    <body id="body-content-page">
+        <nav id="sidebar">
+            <h4 id="sidebar-title">Quick Links</h4>
+            <hr id="sidebar-rule">
+            <ol id="sidebar-list">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="constant-jerk-problem.html">The Problem of Constant Jerk</a></li>
+                <li><a href="atdot-derivation.html">Derivation of \( \dot{a}_T \)</a></li>
+                <li><a href="jt-derivation.html">Derivation of \( j_T \)</a></li>
+                <li><a href="numerical-solutions.html">Numerical Solutions</a></li>
+                <li><a href="future-work.html">Future Work</a></li>
+                <li><a href="acknowledgments.html">Acknowledgements</a></li>
+            </ol>
+        </nav>
+        <div class="main-container" id="content-page-main-container">
+            <header>
+                <h1>The Problem of Constant-Jerk Motion</h1>
+                <div id="index-personal-info">By Mateo Patino
+                <br>
+                Thornton Academy - May 2025
+                </div>
+            </header>
+            <main>
+                <div class="body-container">
+                    <h2 id="exact-definitions">Exact Definitions</h2>
+                    <p>
+                        To properly study constant-jerk motion, it is necessary to resolve the ambiguities that come with the phrase "constant jerk." Dr. Nash and I conceived the notion of constant jerk in this research as the rate of change of acceleration in the direction of motion of an object, or in other words, as a measure of variation in the rate of change of speed. Hence, constant jerk in the context of our work refers to the jerk in the tangential direction of an object's trajectory, not in the normal (centripetal) direction (we did not explore constant normal jerk. This type of motion would be characterized by having a centripetal acceleration as opposed to a tangential acceleration that changes linearly over time). 
+                    </p>
+                    <p>
+                       The explanation above also implies that the phrase "constant jerk" does not refer to the total jerk, as this vector may have a changing direction or magnitude along the trajectory. We are only placing constraints on the tangential component of jerk and acceleration, not on the vectors as a whole.
+                    </p>
+                    <p>
+                        It should now be clear that our focus lies in the behavior of tangential jerk and acceleration and not on their orthogonal or vector equivalents. But this raises another issue concerning the definition of constant tangential jerk. One could define tangential jerk as the magnitude of the component of the jerk vector along the tangential direction of motion (hereafter denoted by \( j_T \)). But another definition of tangential jerk could be as the time derivative of the magnitude of tangential acceleration (hereafter denoted by \( \dot{a}_T \)). This second definition is just as valid as the first one because jerk is the rate of change of acceleration over time, and \( \dot{a}_T \) quantifies just that for the tangential component of acceleration. 
+                    </p>
+                    <p>
+                        Considering the definition of jerk, one would expect the tangential component of jerk \( j_T \) and the time derivative of tangential acceleration \( \dot{a}_T \) to be mathematically identical, but they are not. Both of these definitions quanitify the rate of change of tangential acceleration, but they do so in different ways, so the mathematical relationship between them is highly intricate.
+                    </p>
+                    <h2 id="math-atdot-jt">The Mathematics of \( j_T \) and \( \dot{a}_T \)</h2>
+                    <p>
+                        To illustrate the relationship between \( j_T \) and \( \dot{a}_T \), let's consider a two-dimensional cartesian coordinate plane where \( y = y(x) \) is a frictionless surface and \( \alpha \) is the local angle created by a tangent line on \( y = y(x) \) with respect to the horizontal axis, as shown below.
+                    </p>
+                    <div class="figure-container">
+                        <img src="images/figures/figure1.png" alt="A curve with the normal and gravitational forces acting on an object" width="320" height="237">
+                        <p class="figure-caption">
+                            A diagram of the contact and gravitational forces experienced by an object on \( y = y(x) \).
+                        </p>
+                    </div>
+                    <p>
+                        The difference between \( j_T \) and \( \dot{a}_T \) will become clear after finding the jerk vector in a tangential-normal basis. Hence, our goal is to differentiate the acceleration vector \( \boldsymbol{\vec{a}} = a_T \, \boldsymbol{\hat{T}} + a_N \, \boldsymbol{\hat{N}} \) in terms of normal and tangential components to find jerk, denoted by \( \vec{\boldsymbol{j}} \). Using the product rule to differentiate the acceleration vector will give,
+                        \[ 
+                            \vec{\boldsymbol{j}} = \dot{a}_T \, \hat{\boldsymbol{T}} + a_T \, \dot{\hat{\boldsymbol{T}}} + \dot{a}_N \, \hat{\boldsymbol{N}} + a_N \, \dot{\hat{\boldsymbol{N}}}
+                        \]
+                        We can leave our answer for \( \vec{\boldsymbol{j}} \) in terms of \( a_T \) and \( a_N \) and their time derivatives, but \(\dot{\hat{\boldsymbol{T}}}\) and \( \dot{\hat{\boldsymbol{N}}}\) can be further simplified.
+                    </p>
+                    <p>
+                        Since \(\alpha\) is the local angle of the curve, \(\cos \alpha\) and \(\sin \alpha\) represent the projection of the curve along the horizontal and vertical directions, which enables us to define the normal and tangential unit vectors in terms of \(\alpha\). Hence, the tangential unit vector is, 
+                        \[ 
+                            \boldsymbol{\hat{T}} = \cos \alpha \, \boldsymbol{\hat{i}} + \sin \alpha \, \boldsymbol{\hat{j}}
+                        \]
+                        The normal unit vector is identical to \( \boldsymbol{\hat{T}} \) except it is rotated by \( 90° \) counterclockwise to match the direction of the normal force, so it can be written as,
+                        \[
+                            \boldsymbol{\hat{N}} = -\sin \alpha \, \boldsymbol{\hat{i}} + \cos \alpha \, \boldsymbol{\hat{j}}
+                        \]
+                    </p>
+                    <p>
+                        We proceed to take the time derivatives of \( \boldsymbol{\hat{T}} \) and \( \boldsymbol{\hat{N}} \). We do not need to use the product rule as \( \boldsymbol{\hat{i}}\) and \(\boldsymbol{\hat{j}}\) are constant basis vectors. For \( \boldsymbol{\hat{T}} \), this operation gives us,
+
+                        \[
+                            \frac{d\boldsymbol{\hat{T}}}{dt} = -\dot{\alpha} \sin \alpha \, \boldsymbol{\hat{i}} + \dot{\alpha} \cos \alpha \, \boldsymbol{\hat{j}} = \dot{\alpha} \left(-\sin \alpha \, \boldsymbol{\hat{i}} + \cos \alpha \, \boldsymbol{\hat{j}}\right)
+                        \]
+                        and for \( \boldsymbol{\hat{N}} \), we obtain,
+                        \[
+                            \frac{d\boldsymbol{\hat{N}}}{dt} = -\dot{\alpha} \cos \alpha \, \boldsymbol{\hat{i}} - \dot{\alpha} \sin \alpha \, \boldsymbol{\hat{j}} = - \dot{\alpha} \left(\cos \alpha \, \boldsymbol{\hat{i}} + \sin \alpha \, \boldsymbol{\hat{j}}\right)
+                        \]
+                        Take a careful look at both time derivatives. Notice how each one can be expressed in terms of our previous definitions for \(\boldsymbol{\hat{N}}\) and \(\boldsymbol{\hat{T}}\):
+                        \[
+                            \dot{\hat{\boldsymbol{T}}} = \dot{\alpha} \left(-\sin \alpha \, \boldsymbol{\hat{i}} + \cos \alpha \, \boldsymbol{\hat{j}}\right) = \dot{\alpha} \, \hat{\boldsymbol{N}}
+                        \]
+                        \[
+                            \dot{\hat{\boldsymbol{N}}} = - \dot{\alpha} \left(\cos \alpha \, \boldsymbol{\hat{i}} + \sin \alpha \, \boldsymbol{\hat{j}}\right) = -\dot{\alpha} \, \hat{\boldsymbol{T}}
+                        \]
+                    </p>
+                    <p>
+                        We can now return to our expression for jerk \(\vec{\boldsymbol{j}}\) and substitute \(\dot{\hat{\boldsymbol{T}}}\) and \(\dot{\hat{\boldsymbol{N}}}\) with the formulae we have just derived in terms of \(\alpha\). This will enable us to write the jerk vector in tangential-normal basis; namely, \( \vec{\boldsymbol{j}} = j_T \, \hat{\boldsymbol{T}} + j_N \, \hat{\boldsymbol{N}}\). After grouping like-terms together, we will get the result,
+                        \[
+                            \vec{\boldsymbol{j}} = \dot{a}_T  \, \hat{\boldsymbol{T}} + a_T \, \dot{\alpha} \, \hat{\boldsymbol{N}} + \dot{a}_N \, \hat{\boldsymbol{N}} - a_N \, \dot{\alpha} \, \hat{\boldsymbol{T}} = \left( \dot{a}_T - a_N \, \dot{\alpha} \right) \hat{\boldsymbol{T}} + \left( a_T \, \dot{\alpha} + \dot{a}_N \right) \hat{\boldsymbol{N}}
+                        \]
+                    </p>
+                    <p>
+                        As stated before, our research is focused on the tangential part of jerk, which reads \(\left( \dot{a}_T - a_N \, \dot{\alpha} \right) \, \hat{\boldsymbol{T}} \). This enables us to finally put a mathematical definition on the magnitude of the tangential jerk:
+                        \[
+                            j_T = \dot{a}_T - a_N \, \dot{\alpha}
+                        \] 
+                    </p>
+                    <p>
+                        I hope that you're excited to see that \(\dot{a}_T\) is present in this definition of \(j_T\), offering definitive evidence that \(\dot{a}_T\) and \(j_T\) are different physical quantities, even though both describe tangential jerk. The difference between \(\dot{a}_T\) and \(j_T\) arises from the term \(- a_N \, \dot{\alpha} \), which comes from taking the time derivative of the normal unit vector.
+                    </p>
+                    <p>
+                        We have proven that \(\dot{a}_T\) and \(j_T\) are fundamentally different ways to express tangential jerk, but we have not yet connected these two quantities to \(y(x)\) explicitly. In sections <a href="atdot-derivation.html">3</a> and <a href="jt-derivation.html">4</a>, you will find the derivations for \(\dot{a}_T\) and \(j_T\) in terms of \(y(x)\), which gave us a system of differential equations whose solution was \(y(x)\).
+                    </p>
+                </div>
+            </main>
+            <footer>
+                <address>
+                    © Mateo Patino 2025
+                </address>
+            </footer>
+        </div>
+    </body>
+</html>

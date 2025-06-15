@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Software Use</title>
+        <link rel="stylesheet" href="styles.css" media="all"> 
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet"> <!--For Open Sans and Roboto-->
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--For LaTeX formatting-->
+    </head>
+    <body id="body-content-page">
+        <div id="sidebar">
+            <h4 id="sidebar-title">Quick Links</h4>
+            <hr id="sidebar-rule">
+            <ol id="sidebar-list">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="constant-jerk-problem.html">The Problem of Constant Jerk</a></li>
+                <li><a href="atdot-derivation.html">Derivation of \( \dot{a}_T \)</a></li>
+                <li><a href="jt-derivation.html">Derivation of \( j_T \)</a></li>
+                <li><a href="numerical-solutions.html">Numerical Solutions</a></li>
+                <li><a href="software.html">Use of Software</a></li>
+                <li><a href="future-work.html">Future Work</a></li>
+                <li><a href="acknowledgments.html">Acknowledgements</a></li>
+            </ol>
+        </div>
+        <div class="main-container" id="content-page-main-container">
+            <header>
+                <h1>Python, Matplotlib, and NumpPy</h1>
+                <div id="index-personal-info">By Mateo Patino
+                <br>
+                Thornton Academy - May 2025
+                </div>
+            </header>
+            <main>
+                <div class="body-container">
+                    <p>
+                        I have postponed implementing this page as well. Here I would like to talk about my experience writing the code for the <a href="numerical-solutions.html">RK4</a> algorithm in Python, and all the subsequent work developing the tools and features to analyze the resulting curves. Unlike the other pages, this one would contain little math and a lot of code snippets. And because I did not have enough time to figure out how to create a nice container/environment where I can display code in a nice way on the page and didn't narrow down what specific parts of the software I wrote I want to discuss, I decided to implement this page later.
+                    </p>
+                    <p>
+                        Note: talk about the problem of arrays with different sizes. For example, if you're u(x) array has n values, your y(x) array is going to have n + 1 values. This can give you nice interesting topics to discuss, like how to calculate y at the edges of each array, and you handled different dimensionalities of the arrays.
+                    </p>
+                    <p>
+                        Talk about the hodograph and the mask you used at some point.
+                    </p>
+                </div>
+            </main>
+            <footer>
+                <address>
+                    © Mateo Patino 2025
+                </address>
+            </footer>
+        </div>
+    </body>
+</html>

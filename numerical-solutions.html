@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Numerical solutions</title>
+        <link rel="stylesheet" href="styles.css" media="all"> 
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet"> <!--For Open Sans and Roboto-->
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--For LaTeX formatting-->
+    </head>
+    <body id="body-content-page">
+        <nav id="sidebar">
+            <h4 id="sidebar-title">Quick Links</h4>
+            <hr id="sidebar-rule">
+            <ol id="sidebar-list">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="constant-jerk-problem.html">The Problem of Constant Jerk</a></li>
+                <li><a href="atdot-derivation.html">Derivation of \( \dot{a}_T \)</a></li>
+                <li><a href="jt-derivation.html">Derivation of \( j_T \)</a></li>
+                <li><a href="numerical-solutions.html">Numerical Solutions</a></li>
+                <li><a href="future-work.html">Future Work</a></li>
+                <li><a href="acknowledgments.html">Acknowledgements</a></li>
+            </ol>
+        </nav>
+        <div class="main-container" id="content-page-main-container">
+            <header>
+                <h1>Numerical Solutions to \(\dot{a}_T\) and \(j_T\)</h1>
+                <div id="index-personal-info">By Mateo Patino
+                <br>
+                Thornton Academy - May 2025
+                </div>
+            </header>
+            <main>
+                <div class="body-container">
+                    <p>
+                        Our research involves handling a myriad of equations and mathematical expressions, but two equations hold a special degree of importance. The first one is the differential equation for \(\dot{a}_T\),
+                        \[
+                            \dot{a}_T = \frac{gy''(x)v}{\left( 1 + y'(x)^2 \right)^2}
+                        \]
+                        and the second one is the differential equation for \(j_T\),
+                        \[
+                            j_T = \frac{-gy''(x)v}{\left( 1 + y'(x)^2 \right)^2} - f \frac{y''(x)^2 v^3}{\left( 1+y'(x)^2 \right)^3}
+                        \]
+                    </p>
+                    <p>
+                        Unfortunately, these are complicated non-linear higher-order differential equations for which an analytical solution seems unlikely. Therefore, Dr. Nash and I dedicated a large portion of our work on writing computer software to solve these equations numerically and analyze their results.
+                    </p>
+                    <h2 id="rk4-algorithm">The Runge-Kutta Algorithm</h2>
+                    <p>
+                        To solve the differential equations above, we resorted to one of the most powerful numerical methods for solving differential equations: the 4th-order <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods" target="_blank">Runge-Kutta</a> algorithm (often abbreviated as RK4). 
+                    </p>
+                    <p>
+                        RK4 is an iterative technique that approximates solutions to ordinary differential equations (ODEs) by combining information about the slope of the solution at several points within each time step. To implement RK4, we begin by writing the derivative of an dependent variable \(y\) as a function of itself and the independent variable, denoted by \(t\) in this example. This gives us an equation of the form, 
+                        \[
+                            \frac{dy}{dt} = f(t, y)
+                        \] 
+                        Given an initial condition \(y(t_0) = y_0\) and a step size \(h\), RK4 allows us to estimate the solution at \(t_0 + h\) using a weighted average of four slope evaluations:
+                        \[
+                            k_1 = f(t_n, y_n)
+                        \]   
+                        \[
+                            k_2 = f\left(t_n + \frac{h}{2}, y_n + \frac{h}{2}k_1\right) 
+                        \]
+                        \[
+                            k_3 = f\left(t_n + \frac{h}{2}, y_n + \frac{h}{2}k_2\right)
+                        \]
+                        \[
+                            k_4 = f(t_n + h, y_n + h k_3) 
+                        \]
+                        For each step of the \(n\) iterations of the algorithm, we will have four \(k\) values and a corresponding solution \(y_n\). With this information, we can approximate with great precision the solution at the \(n+1\) step of the algorithm via,
+                        \[
+                            y_{n+1} = y_n + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+                        \]
+                    </p>
+                    <p>
+                        The key idea is that each intermediate slope (\(k_1\) through \(k_4\)) refines the estimate of the true derivative behavior over the interval \([t_n, t_n + h]\), resulting in a fourth-order accurate approximation—meaning the local error per step is on the order of \(h^5\), and the total accumulated error is on the order of \(h^4\). This means that for really small step sizes, the RK4 solution will be practically indistinguishable from the real solution.
+                    </p>
+                    <h3 id="applying-rk4-atdot">Applying RK4 to \(\dot{a}_T\)</h3>
+                     <p>
+                        Let's begin by writing the differential equation for \(\dot{a}_T\) in the form \(\frac{dy}{dt} = f(t, y)\). 
+                        \[
+                            \dot{a}_T = \frac{gy''(x)v}{\left( 1 + y'(x)^2 \right)^2}
+                        \]
+                        In our case, \(y\) is the dependent variable and \(x\) is the independent variable, and we want to rewrite \(\dot{a}_T\) in a way that \(y'(x)\) is on the left-hand side and \(f(x, y)\) is on the right. However, you will notice that the differential equation for \(\dot{a}_T\) contains \(y''\) and \(y'\) but not \(y\). We can use a dummy variably to fix this problem.
+                     </p>
+                     <p>
+                        First, we'll multiply both sides of the equation by \( \left(1 + y'(x)^2\right)^2 \) and divide by \( gv \) to isolate \(y''(x)\),
+                        \[
+                            y''(x) = \frac{\dot{a}_T}{gv} \, \left( 1 + y'(x)^2 \right)^2
+                        \]
+                        Now we will let \(u(x) = y'(x)\), which also leads to \(u'(x) = y''(x)\). Using these two substitutions, we can write the equation above in the form \( \frac{du}{dx} = f(x, u) \),
+                        \[
+                            u'(x) = \frac{\dot{a}_T}{gv} \, \left( 1 + u(x)^2 \right)^2
+                        \]
+                     </p>
+                     <p>
+                        We can now use a computer to write the RK4 alrgorithm and solve the equation above. This process will give us an array of discrete values that represent \(u(x_n)\), the slope of \(y=y(x)\) at the \(n\)-th point along the curve. We can use this information about the slope of \(y(x)\) to compute an array of \(y(x)\) values by treating the differentials \(dy\) and \(dx\) as finite differences,
+                        \[
+                            \frac{dy}{dx} = u(x) \, \Leftrightarrow \, dy = u(x)dx \, \Leftrightarrow \, \Delta y = u(x_n) \Delta x
+                        \]
+                        The difference \(\Delta y\) represents the difference between \(y_n\) and \(y_{n+1}\) and \(\Delta x\) represents the horizontal distance that corresponds to a increase or decrease in \(y(x)\) of magnitude \(\Delta y\). This horizontal distance will often be \(h\), the step size used in the RK4, so the equation of finite differences above can ultimately be written as,
+                        \[
+                            y_{n+1} - y_n = u(x_n)h 
+                        \]
+                        and since we're interested in generating an array of \(y\) values, we'll calculate the next value in the array via
+                        \[
+                            y_{n+1} = y_n + u(x_n)h 
+                        \]
+                     </p>
+                     <p>
+                        After a few hundreds, thousands, or even millions of iterations of RK4 (depending on our choice of \(h\)), we will have an array of \(n\) values where each one represents \(y = y(x_n)\). By plotting this \(y\)-array against the \(x_n\) values, the form of the curve \(y=y(x)\) can be finally observed.
+                     </p>
+                     <h3 id="applying-rk4-jt">Applying RK4 to \(j_T\)</h3>
+                     <p>
+                        Similarly to the way in which we rearranged \(\dot{a}_T\), we will write the differential equation for \(j_T\) in the form \(\frac{du}{dx} = f(x, u)\) to run the RK4 algorithm on it. First, we need to isolate \(y''(x)\) on one side of the equation, and we can do so by noticing that the equation for tangential jerk,
+                        \[
+                             j_T = \frac{-gy''(x)v}{\left( 1 + y'(x)^2 \right)^2} - f \frac{y''(x)^2 v^3}{\left( 1+y'(x)^2 \right)^3}
+                        \]
+                        is a quadratic equation of the form \(aw^2 + bw + c = 0\) with respect to \(y''(x)\):
+                        \[
+                            \left( \frac{-fv^3}{\left(1 + y'(x)^2\right)^3} \right) \, y''(x)^2 + \left( \frac{-gv}{\left( 1+ y'(x)^2\right)^2} \right) \, y''(x) - j_T = 0
+                        \]
+                        We will use the same substitution as before to reach an equation suitable for RK4, so we will insert \(u(x) = y'(x)\) and \(u'(x)=y''(x)\) into the equation above. This will give us a quadratic equation with respect to \(u'(x)\) of the form \(au'(x)^2 + bu'(x) + c = 0\),
+                        \[
+                            \left( \frac{-fv^3}{\left(1 + u(x)^2\right)^3} \right) \, u'(x)^2 + \left( \frac{-gv}{\left( 1+ u(x)^2\right)^2} \right) \, u'(x) - j_T = 0
+                        \]
+                        Hence, we can find an exact expression for \(u'(x)\) using the quadratic formula,
+                        \[
+                            u'(x) = \frac{-b \pm \sqrt{b^2-4ac}}{2a}
+                        \]
+                        where \(a\), \(b\), and \(c\) correspond to the coefficient in parenthesis of each term. 
+                     </p>
+                     <p>
+                        You can probably imagine how messy it is to substitute these coefficients into the quadratic formula. I find a strange type of fascination in seeing extremely long and cumbersome mathematical expressions, so I feel compelled to show you what inserting the coefficients into the quadratic formula would give you:
+                        \[
+                            u'(x) = - \frac{ \left( 1 + u(x)^2 \right)^3 }{2fv^3} \left(  \frac{gv}{\left(1 + u(x)^2\right)^2} \pm \sqrt{ \frac{\left(gv\right)^2}{\left(1 + u(x)^2 \right)^4} - \frac{4 j_T fv^3}{\left(1 + u(x)^2 \right)^3} } \right)
+                        \]
+                        If you patiently wade through all the algebra and simplification necessary to transform this beast into a clean expression for \(u'(x)\), you should get the following result,
+                        \[
+                            u'(x) = \frac{1 + u(x)^2}{2fv^2} \left( -g + \sqrt{g^2 - 4 j_T fv \left(1 + u(x)^2 \right)} \right)
+                        \] 
+                     </p>
+                     <p>
+                        Notice that this equation is in the form \(\frac{du}{dx} = f(x, u)\), so we may proceed to run the RK4 algorithm on it. Similarly to the past case of \(\dot{a}_T\), RK4 will produce an array of \(n\) numbers, each one representing the slope of \(y = y(x)\) at discrete locations. Using the method of finite differences, \(y(x)\) can be reconstructed from its slope data by calculating the next value in the \(y\)-sequence via,
+                        \[
+                            y_{n+1} = y_n + u(x_n)h 
+                        \]
+                        where \(h\) is the step size and \(y_n\) and \(x_n\) represent the last data point \(y_n = y(x_n)\).
+                     </p>
+                     <h3 id="numerical-results">Results</h3>
+                     <p>
+                        After implementing the RK4 algorithm and applying it to the differential equations of \(\dot{a}_T\) and \(j_T\), we'll have an array of \(y\) values and one of \(x\) values. By plotting these points and connecting them with a curve, we can finally observe what \(y(x)\) looks like. 
+                     </p>
+                     <p>
+                        When we run RK4, it is necessary to pick a value for \(\dot{a}_T\) and \(j_T\). Curves in which this value is positive are concave down, while curves in which this value is negative are concave up. Below you will find two sets of \(y(x)\) curves with positive and negative values for \(\dot{a}_T\) and \(j_T\) alongside other arbitrary parameters needed to compute them.
+                     </p>
+                     <div class="two-figure-wrapper">
+                        <div class="figure-container">
+                            <img src="images/figures/figure2a.png" alt="Two curves which exhibit constant-jerk behavior" width="347" height="293">
+                            <p class="figure-caption">
+                                \( \dot{a}_T \text{, } j_T = 2 \text{ m/s}^3 \), \( a_0 = 0 \), \( v_0 = 1 \text{ m/s} \)
+                            </p>
+                        </div>
+                        <div class="figure-container">
+                            <img src="images/figures/figure2d.png" alt="Two curves which exhibit constant-jerk behavior" width="296" height="293">
+                            <p class="figure-caption">
+                                \( \dot{a}_T \text{, } j_T = -4 \text{ m/s}^3 \), \( a_0 = 7 \text{ m/s}^2 \), \( v_0 = 0 \)
+                            </p>
+                        </div>
+                    </div>
+                    <p>
+                        Those <i>are</i> the constant-jerk curves. These curves answer our original question: what surface curvature gives a sliding object a constant jerk? The constant-\(j_T\) curves in orange exert a force on an object such that the tangential component of jerk is constant over time. On the other hand, the blue constant-\(\dot{a}_T\) curves do not influence the tangential component of jerk but the tangential acceleration: the normal force from these surfaces curls the object's trajectory in a way that makes its tangential acceleration increase or decrease by the same amount each second.
+                    </p>
+                    <p>
+                        What I find most surprising about these two types of curves is that the mechanical effect they have on an object's motion is vastly different, yet the two curves are remarkably similar to each other. For both cases of positive and negative jerk, both surfaces start out identically, but they slowly begin to separate from each other as the object moves further to the right. But even as the curves diverge, the vertical separation between them is no more than 2 to 4 meters, even as the objects have traveled tens of meters away from their starting point. I was expecting surfaces with much more noticeable differences because each one was derived through very different series of steps and each one has a unique mathematical meaning, as illustrated <a href="constant-jerk-problem.html">here</a>.
+                    </p>
+                    <p>
+                        Another interesting finding about these curves is that it is impossible to produce a curve where both \(\dot{a}_T\) and \(j_T\) are constant. This implies that a curve defined by a constant \(j_T\) must have a varying \(\dot{a}_T\) and vice versa. For example, the following plot shows the signed magnitude of the components of the jerk vector and \(\dot{a}_T\) for different horizontal positions along curves in Case A.
+                    </p>
+                    <div class="two-figure-wrapper">
+                        <div class="figure-container">
+                            <img src="images/figures/figure3a.png" alt="Components of jerk and the time derivative of a_T along the curve" width="345" height="271">
+                            <p class="figure-caption">
+                                Magnitudes of \(j_T\), \(j_N\), and \(\dot{a}_T\) for constant-\(j_T\) curve.
+                            </p>
+                        </div>  
+                        <div class="figure-container">
+                            <img src="images/figures/figure3b.png" alt="Components of jerk and the time derivative of a_T along the curve" width="345" height="270">
+                            <p class="figure-caption">
+                                Magnitudes of \(j_T\), \(j_N\), and \(\dot{a}_T\) for constant-\(\dot{a}_T\) curve.
+                            </p>
+                        </div>
+                    </div>
+                    <p>
+                        On the left plot, notice how keeping \(j_T\) constant appears to create a linearly decreasing \(\dot{a}_T\). Similarly, keeping \(\dot{a}_T\) constant creates a \(j_T\) of increasing magnitude.
+                    </p>
+                    <p>
+                        If we look at the same plots of the jerk components but for Case B curves (surfaces with negative jerk), we obtain even more intriguing results.
+                    </p>
+                    <div class="two-figure-wrapper">
+                        <div class="figure-container">
+                            <img src="images/figures/figure4a.png" alt="Components of jerk and the time derivative of a_T along the curve" width="343" height="272">
+                            <p class="figure-caption">
+                                Magnitudes of \(j_T\), \(j_N\), and \(\dot{a}_T\) for constant-\(j_T\) curve.
+                            </p>
+                        </div>
+                        <div class="figure-container">
+                            <img src="images/figures/figure4b.png" alt="Components of jerk and the time derivative of a_T along the curve" width="367" height="272">
+                            <p class="figure-caption">
+                                Magnitudes of \(j_T\), \(j_N\), and \(\dot{a}_T\) for constant-\(\dot{a}_T\) curve.
+                            </p>
+                        </div>
+                    </div>
+                    <p>
+                        For curves with negative jerk (concave up), keeping \(j_T\) constant creates a <i>nearly</i> constant \(\dot{a}_T\) that only shows significant variations at the left and right edges of the curve. Likewise, a curve where \(\dot{a}_T\) is constant yields a \(j_T\) that stays virtually constant for the center portion of the curve but increases and decreases near the edges. This behavior is quite interesting, and Dr. Nash and I were unable to figure out why this phenomenon is present in curves with negative jerk but not in those with positive jerk.
+                    </p>
+                    <p>
+                        One question that arises from these results is whether local regions of a constant-jerk curve can produce motion in which both \(\dot{a}_T\) and \(j_T\) are constant. Initially, we claimed that a system could not have this property because we focused on the whole curve, and there is undeniable variation in \(\dot{a}_T\) and \(j_T\) near the beginning and end of the curves. However, nothing stops us from solely focusing local regions of \(y(x)\). It is possible that \(\dot{a}_T\) and \(j_T\) behave identically on a smaller scale or over specific intervals, explaining the results from the plots above where both \(\dot{a}_T\) and \(j_T\) appear to be constant for \(x\) positions near the center of the curve.
+                     </p>
+                </div>
+            </main>
+            <footer>
+                <address>
+                    © Mateo Patino 2025
+                </address>
+            </footer>
+        </div>
+    </body>
+</html>

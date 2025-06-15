@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Overview</title>
+	<link rel="stylesheet" href="styles.css" media="all"> 
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet"> <!--For Open Sans and Roboto-->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--For LaTeX formatting-->
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <h1>What curvature creates a constant jerk?</h1>
+            <div id="index-personal-info">
+                <p>
+                    By Mateo Patino
+                    <br>
+                    Thornton Academy - May 2025
+                </p>
+            </div>
+        </header>
+        <main>
+            <div class="body-container">
+                <p>
+                    During my junior and senior years of high school, I conducted research in physics with Dr. Clinton Nash, an AP instructor at my school. For more than fifteen months, we studied the mathematics that describe the motion of a point-mass experiencing a constant jerk on a curved surface and ultimately published our findings in the Fall 2025 edition of the <i>Journal of Undergraduate Research in Physics and Astronomy</i>. This post narrates my experience deriving equations and writing code for this project and explains the diverse insights I gained along the way. If you're interested in physics, math, or computer programming, you'll likely find this an enjoyable read.
+                </p>
+            </div>
+            <nav id="table-of-contents-container">
+                <h4 id="table-of-contents-title">Table of Contents</h4>
+                <ol id="table-of-contents">
+                    <li><a href="#overview">Overview</a></li>
+                    <li>
+                        <a href="constant-jerk-problem.html">The Problem of Constant Jerk</a>
+                        <ul class="toc-subsections-container">
+                            <li>
+                                2.1 <a href="constant-jerk-problem.html#exact-definitions">Exact definitions</a>
+                            </li>
+                            <li>
+                                2.2. <a href="constant-jerk-problem.html#math-atdot-jt">The mathematics of \(\dot{a}_T\) and \(j_T\) </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="atdot-derivation.html">Derivation of \( \dot{a}_T \)</a></li>
+                    <li>
+                        <a href="jt-derivation.html">Derivation of \( j_T \)</a>
+                        <ul class="toc-subsections-container">
+                            <li>
+                                4.1. <a href="jt-derivation.html#initial-setup">Initial setup</a>
+                            </li>
+                            <li>
+                                4.2 <a href="jt-derivation.html#derivative-nhat">Derivative of \(\boldsymbol{\hat{N}}\)</a>
+                            </li>
+                            <li>
+                                4.3. <a href="jt-derivation.html#jerk-components">The components of jerk</a>
+                            </li>
+                            <li>
+                                4.4 <a href="jt-derivation.html#radius">The radius of the osculating circle</a>
+                            </li>
+                            <li>
+                                4.5 <a href="jt-derivation.html#derivative-that">The time derivative of \(\boldsymbol{\hat{T}}\)</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="numerical-solutions.html">Numerical Solutions to \( \dot{a}_T \) and \( j_T \) </a>
+                        <ul class="toc-subsections-container">
+                            <li>
+                                5.1. <a href="numerical-solutions.html#rk4-algorithm">The Runge-Kutta 4 algorithm</a>
+                            </li>
+                            <li>
+                                5.2. <a href="numerical-solutions.html#applying-rk4-atdot">Applying RK4 to \(\dot{a}_T\)</a>
+                            </li>
+                            <li>
+                                5.3. <a href="numerical-solutions.html#applying-rk4-jt">Applying RK4 to \(j_T\)</a>
+                            </li>
+                            <li>
+                                5.4. <a href="numerical-solutions.html#numerical-results">Results</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="future-work.html">Future Work</a></li>
+                    <li><a href="acknowledgments.html">Acknowledgements</a></li>
+                </ol>
+            </nav>
+            <div id="overview">
+                <h2>Overview</h2>
+                <div class="body-container">
+                    <p>
+                        In many advanced physics problems, physicists seek to find a trajectory that exhibits specific qualities. If you've taken a few semesters of physics, you may be familiar with the <a href="https://en.wikipedia.org/wiki/Brachistochrone_curve" target="_blank">Brachistochrone curve</a>: the trajectory via which an object can travel between two points in the shortest amount of time under the influence of gravity. 
+                    </p>
+                    <div class="figure-container">
+                        <img src="images/figures/brachistochrone.gif" alt="Animation showing three balls rolling down different surfaces." width="488" height="203">
+                        <p class="figure-caption">The red curve is the fastest path between the two points, and it is mathematically described by a <a href="https://en.wikipedia.org/wiki/Cycloid">cycloid</a>.</p>
+                    </div>
+                    <p>
+                        I worked on a similar problem, but instead of minimizing travel time, my teacher and I wanted to keep the jerk experienced by an object invariant along the trajectory—namely, we wanted the object's acceleration to increase at a constant rate as it traveled down the curve. In other words, we searched for a curve  \( y = y(x) \) whose shape causes the speed of a sliding point mass to change by a linearly-increasing or -decreasing amount each time. To achieve this type of motion, we had to ensure the curve \(y(x)\) forced the tangential component of acceleration—which is the component that directly affects speed—to change linearly over time. This constraint implies that the object must experience a constant tangential jerk along the the entire trajectory.
+                    </p>
+                    <h3>Our Solution</h3>
+                    <p>
+                        Physics students know that most mechanics problems begin with Newton's Second Law, and this is where our mathematical work started. We wrote the acceleration vector of the point-mass in terms of normal and tangential forces; calculated the jerk vector in terms of  \( y(x) \), which gave us a system of ordinary differential equations (ODEs); and we wrote a Python <a href="https://github.com/mateo-patino/jcurve">program</a> to solve the system of ODEs and plot its solution with varying initial conditions. 
+                    </p>
+                    <p>
+                        In the end, here's what  \( y = y(x) \)  looks like for a positive value of jerk (left) and for a negative value of jerk (right):
+                    </p>
+                    <div class="two-figure-wrapper">
+                        <div class="figure-container">
+                            <img src="images/figures/figure2a.png" alt="Two curves which exhibit constant-jerk behavior" width="385" height="325">
+                            <p class="figure-caption">
+                                \( j = 2 \text{ m/s}^3 \), \( a_0 = 0 \), \( v_0 = 1 \text{ m/s} \)
+                            </p>
+                        </div>
+                        <div class="figure-container">
+                            <img src="images/figures/figure2d.png" alt="Two curves which exhibit constant-jerk behavior" width="329" height="325">
+                            <p class="figure-caption">
+                                \( j = -4 \text{ m/s}^3 \), \( a_0 = 7 \text{ m/s}^2 \), \( v_0 = 0 \)
+                            </p>
+                        </div>
+                    </div>
+                    <p>
+                        Cases A and B represent the trajectory of the point-mass with the initial conditions listed above. You will notice that there are two curves instead of one, and this is one of the key findings of our research. It turns out that there are two ways in which an object can experience a constant jerk, which leads to two \( y = y(x) \) curves. The first type of constant-jerk motion is one where the tangential component of the jerk vector, denoted by \(j_T\) is held constant along the curve. The second way is achieved by making the time derivative of the tangential component of the acceleration, denoted by \(\dot{a}_T\), be constant. Surprisingly, the tangential component of jerk is <i>not</i> equal to the time derivative of the tangential acceleration, which explains why these two types of constant-jerk motion yield different \( y = y(x) \) curves. If you want to see the mathematics that lead to this interesting result, take a look at <a href="constant-jerk-problem.html">section 2</a> of this post. 
+                    </p>
+                    <h3>Why Smoothness Matters</h3>
+                    <p>
+                        The two \( y(x) \) surfaces we discovered are smooth for either case of positive or negative jerk—there are no discontinuities or regions along the curve where the physics break down. The only location where undefined behavior occurs is at the point on a curve with positive jerk where the object's speed is so high that gravity is not strong enough to keep it in contact with the surface. After this point, the object diverges from the constant-jerk trajectory and transitions into parabolic free fall.
+                    </p>
+                    <div class="figure-container">
+                        <img src="images/figures/figure2b.png" alt="Curve showing object transitioning into free fall" width="385" height="380">
+                        <p id="figure-2b-caption" class="figure-caption">
+                            At \( x = 34.52 \text{ m} \), the object's speed is \(  25.0 \text{ m/s} \), too high for the gravitational centripetal force to keep the object on the surface. Hence, the object enters free fall for \( x > 34.52 \text{ m} \).
+                        </p>
+                    </div>
+                    <p>
+                        The fact that \( y(x) \) is a smooth surface is great news. First, it indicates that constant-jerk motion under the influence of gravity is physically possible and does not contradict any established principle of physics. But most importantly, this fact suggests that an analytical curve that exhibits constant-jerk behavior <i>may</i> exist. If you're not familiar with the term "analytical" in the context of math, it simply refers functions that have an explicit definition, like \( f(x) = 10x \)  or \( f(x) = x^2 \), as opposed to those functions that are defined in terms of integrals or solutions to differential equations, like the <a href="https://en.wikipedia.org/wiki/Error_function">error function</a> or <a href="https://en.wikipedia.org/wiki/Airy_function">Airy's function</a>.
+                    </p>
+                    <p>
+                        The existence of an analytical curve with constant-jerk properties is a matter of great significance. Finding such a curve would be a triumph in the field of classical mechanics and mathematics because it implies uncovering a connection between the physics of 2D motion and an abstract mathematical object with no physical significance <i>a priori</i>. Physicists and mathematicians alike find pleasure in such discoveries because they are intricate and infrequent; this is precisely why the cycloid in the Brachistochrone problem became one of the most well know surfaces in classical mechanics. And if a similar analytical curve with constant-jerk properties is discovered, this curve and its geometric and algebraic characteristics will likely become of great interest to scientists.
+                    </p>
+                    <h3>Publication</h3>
+                    <p>
+                        During the summer and fall of 2024, Dr. Nash and I wrote two papers describing our constant-jerk problem and presenting our solution in detail. We first wrote a <a href="files/first-paper.pdf" target="_blank">16-page paper</a> that we submitted to the <i>American Journal of Physics</i> (<a href="https://www.aapt.org/publications/ajp/index.cfm">AJP</a>). Like it is customary to do in mathematical fields, we used \( \LaTeX \) to design our paper, a formatting software whose basic features I mastered during my past research in astrophysics. I am madly in love with this software when it comes to writing complex mathematics in a digital format, and writing this paper reaffirmed my passion. 
+                    </p>
+                    <div id="abstract" class="figure-container">
+                        <a href="files/first-paper.pdf" target="_blank"><img src="images/figures/abstract.png" alt="The first page of our LaTeX paper" width="541" height="336"></a>
+                        <p class="figure-caption">
+                            The abstract of our first paper, formatted according to AJP's \( \LaTeX \) guidelines. <a href="files/first-paper.pdf">Click</a> to read the paper.
+                        </p>
+                    </div>
+                    <p>
+                        Even though our paper exhibited all the qualities of publishable research, the editors at AJP declined it. They argued that, while our research question and mathematical analysis were attractive, our final solution to the curve \( y = y(x) \) was "uninteresting" because it was numerical and not analytical. Indeed, we had solved our jerk differential equation with a numerical algorithm programmed on a computer and not by hand with explicit derivations, which appeared to diminish the reviewer's interest.
+                    </p>
+                    <p>
+                        Although disappointed, Dr. Nash and I considered the decision by AJP to be fair because we were fascinated by the idea of an analytical solution too and understood that finding one would have made our results much more exciting and groundbreaking.
+                    </p>
+                    <p>
+                        We went on to look for other journals that could fit our research, and we found the <i>Journal of Undergraduate Research of Physics and Astronomy</i> (<a href="https://pubs.aip.org/aip/jurp">JURPA</a>). This journal only publishes short papers at a maximum length of four pages, so Dr. Nash and I went back and wrote a new, more concise version of our original paper to fit JURPA's limit.
+                    </p>
+                    <p>
+                        After two rounds of peer review spanning nearly six months, our paper was accepted for publication at JURPA on May 23, 2025. It was a long-awaited victory for Dr. Nash and me, and although we now both call this research project complete, our work with constant-jerk curves <a href="future-work.html" >continues</a>.
+                    </p>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <address>
+                © Mateo Patino 2025
+            </address>
+        </footer>
+    </div>
+</body>
+</html>

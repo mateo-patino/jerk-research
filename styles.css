@@ -1,0 +1,229 @@
+body {
+    background-color: #f6f6f6;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+h1 {
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+    font-size: 38px;
+}
+
+h2 {
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+a:link {
+    color: rgb(0, 116, 249);
+    text-decoration: none;
+}
+
+a:visited {
+    color: rgb(0, 116, 249);
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #304ad8;
+    text-decoration: none;
+}
+
+a:active {
+    color: rgb(0, 116, 249);
+    text-decoration: none;
+}
+
+.main-container {
+    width: 100ch;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.body-container {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.body-container > p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    margin-top: 0px;
+}
+
+.two-figure-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 30px;
+}
+
+.figure-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.figure-container > img {
+    border-radius: 5px;
+}
+
+.figure-caption {
+    font-family: 'Open Sans', sans-serif;;
+    font-size: 14px;
+    font-style: italic;
+    margin-bottom: 0px;
+}
+
+.toc-subsections-container {
+    list-style: none;
+    line-height: 2.0;
+    font-size: 15px;
+}
+
+/*override flexbox to make sidebar static and left-aligned and keep text in the center*/
+#body-content-page {
+    position: relative;
+}
+
+/*elements w/ this id have same properties as class="main-container" except they're thinner*/
+#content-page-main-container {
+    position: absolute;
+    left: 50%; /*move left edge to the center*/
+    transform: translateX(-50%); /*move left edge 50% of the element's width to the left*/
+    width: 90ch;
+}
+
+#figure-2b-caption {
+    width: 600px;
+}
+
+#index-personal-info {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#table-of-contents-container {
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    margin-top: 20px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#table-of-contents-title {
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: bolder;
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+}
+
+/*This selects all children of #table-of-contents-container */
+#table-of-contents-container > * { 
+    margin-left: 50px;
+}
+
+#table-of-contents {
+    margin-top: 0px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 2.5;
+}
+
+#abstract {
+    margin-top: 10px;
+}
+
+/*A space instead of > selects all imgs inside #abstract, regardless of descendancy*/
+#abstract img {
+    border-radius: 25px;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    margin-top: 40px;
+    background-color: white;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 10px;
+}
+
+#sidebar-title {
+    font-weight: bolder;
+    font-size: 20px;
+    font-family: 'Roboto';
+    margin-left: 30px;
+    margin-bottom: 10px;
+}
+
+#sidebar-rule {
+    margin-top: 16px;
+    margin-left: 30px;
+    width: 150px;
+}
+
+#sidebar-list {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 2.5;
+    margin-left: 10px;
+    margin-right: 35px;
+    margin-bottom: 20px;
+}
+
+#acknowledgments-main-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90ch;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#credits {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+}
+
+#credits > ul {
+    margin-top: 0px;
+    line-height: 25px;
+}
+
+#exact-definitions {
+    margin-top: 5px;
+}

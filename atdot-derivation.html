@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Derivation tangential jerk</title>
+        <link rel="stylesheet" href="styles.css" media="all"> 
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet"> <!--For Open Sans and Roboto-->
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--For LaTeX formatting-->
+    </head>
+    <body id="body-content-page">
+        <nav id="sidebar">
+            <h4 id="sidebar-title">Quick Links</h4>
+            <hr id="sidebar-rule">
+            <ol id="sidebar-list">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="constant-jerk-problem.html">The Problem of Constant Jerk</a></li>
+                <li><a href="atdot-derivation.html">Derivation of \( \dot{a}_T \)</a></li>
+                <li><a href="jt-derivation.html">Derivation of \( j_T \)</a></li>
+                <li><a href="numerical-solutions.html">Numerical Solutions</a></li>
+                <li><a href="future-work.html">Future Work</a></li>
+                <li><a href="acknowledgments.html">Acknowledgements</a></li>
+            </ol>
+        </nav>
+        <div class="main-container" id="content-page-main-container">
+            <header>
+                <h1>Derivation of \(\dot{a}_T\)</h1>
+                <div id="index-personal-info">By Mateo Patino
+                <br>
+                Thornton Academy - May 2025
+                </div>
+            </header>
+            <main>
+                <div class="body-container">
+                    <p>
+                        There are two ways to define tangential jerk, and the simplest one is as the derivative of tangential acceleration. The tangential acceleration of an object on a frictionless curved surface with local angle \(\alpha\) is given by \(a_T = g \sin \alpha \), so its time derivative is 
+                        \[
+                            \dot{a}_T = \frac{da_T}{dt} = g \frac{d\left(\sin \alpha \right)}{dt}
+                        \]
+                    </p>
+                    <p>
+                        We want to express \(\dot{a}_T\) in terms of \(y(x)\), so we need to rewrite \(\sin \alpha\) in terms of \(y(x)\) before taking the time derivative. We will use a common trick in calculus to do so.
+                    </p>
+                    <p>
+                        Because curved surfaces are flat at really small scales, we can fix a right triangle to \(y(x)\) in a way so that its hypotenuse has an infinitesimally small length \(ds\) and sides of magnitude \(dy\) and \(dx\), as shown below. The angle the hypotenuse makes with the horizontal axis is, by definition, the local angle \(\alpha\).
+                    </p>
+                    <div class="figure-container">
+                        <img src="images/figures/dydxds.png" alt="A triangle annexed to a curve with local angle alpha" width="389" height="207">
+                        <p class="figure-caption">
+                            This triangle enables you to write \(\sin \alpha\) and \(\cos \alpha\) in terms of differentials.
+                        </p>
+                    </div>
+                    <p>
+                        Using the Pythagorean Theorem and trigonometric identities, we obtain two important equations,
+                        \[
+                            ds = \sqrt{dx^2 + dy^2}
+                        \]
+                        \[
+                            \sin \alpha = \frac{dy}{ds}
+                        \]
+                        We can then substitute the expression for \(ds\) into the equation for \(\sin \alpha \) and factor out a \(dx^2\) from the radicand.
+                        \[
+                            \sin \alpha = \frac{dy}{\sqrt{dx^2 + dy^2}} = \frac{dy}{\sqrt{dx^2 \left( 1 + \frac{dy^2}{dx^2} \right)}} = \frac{dy}{dx \sqrt{1 + \left( \frac{dy}{dx} \right)^2}}
+                        \]
+                        This expression can be further simplified via prime notation to yield a commonly used identity in mathematics that expresses \(\sin \alpha \) in terms \(y(x)\),
+                        \[
+                            \sin \alpha = \frac{y'(x)}{\sqrt{1 + y'(x)^2}}
+                        \]
+                    </p>
+                    <p>
+                        Now we may return to our original goal: to take the time derivative of tangential acceleration. With our subsitution for \(\sin \alpha\), we now need to calculate the following derivative using basic differentiation rules:
+                        \[
+                            \dot{a}_T = g \frac{d\left(\sin \alpha \right)}{dt} = g \frac{d}{dt} \left( \frac{y'(x)}{\sqrt{1+y'(x)^2}} \right)
+                        \]
+                    </p>
+                    <p>
+                        As you work out this derivative by hand, you will run into the time derivative of \(y'(x)\). You can use the chain rule to rewrite this derivative like this,
+                        \[
+                            \frac{dy'(x)}{dt} = \frac{dy'(x)}{dx} \frac{dx}{dt} = y''(x) \dot{x}
+                        \]
+                        \(\dot{x}\) represents the horizontal component of velocity. We cannot leave our answer in terms of this variable, but there's a trick we can use to write this quantity in terms of \(y(x)\). Since \(\dot{x}\) is the horizontal component of velocity, it holds that \( \dot{x} = v \cos \alpha\), where \(v\) is the speed of the object sliding on the surface. Both \(v\) and \(\cos \alpha\) can be formulated in terms of \(y(x)\). Assuming conservation of energy, the instantaneous speed of the object is a function of its vertical drop \(\Delta y\) along the curve:
+                        \[
+                            v = \sqrt{ v^2_0 + 2g\Delta y} = \sqrt{ v^2_0 + 2g(y_0 - y(x))}
+                        \]
+                        And using the \(ds\)-\(dy\)-\(dx\) triangle above , \(\cos \alpha\) can be expressed as,
+                        \[
+                            \cos \alpha = \frac{1}{\sqrt{1 + y'(x)^2}}
+                        \]
+                        which enables us to arrange \( \dot{x} = v \cos \alpha\) so that \(\dot{x}\) is defined in terms of \(y(x)\),
+                        \[
+                            \dot{x} = v \cos \alpha\ = \frac{v}{\sqrt{1 + y'(x)^2}} = \frac{\sqrt{ v^2_0 + 2g(y_0 - y(x))}}{\sqrt{1 + y'(x)^2}}
+                        \]
+                        where \(y_0\) and \(v_0\) are the initial \(y\)-position of the object and its initial speed, respectively. These two values can be arbitrary parameters, as they will merely stretch or shift the resulting trajectory.
+                    </p>
+                    <p>
+                        Therefore, we can substitute every \(\dot{x}\) in our calculations of \(\dot{a}_T\) for the expression above. After making these substitutions and simplifying the result, we will obtain the following expression for the time derivative of the tangential acceleration,
+                        \[
+                            \dot{a}_T = \frac{gy''(x)v}{\left( 1 + y'(x)^2 \right)^2}
+                        \]
+                    </p>
+                    <p>
+                        You're welcome to write \(v\) in terms \(y(x)\) and the other physical parameters, but we decided to continue denoting the speed with the letter \(v\) in all equations throughout our research for aesthetic purposes. If you choose to do so as well, keep in mind that \(v\) is a function of \(y(x)\) and that their relationship is trivial.
+                    </p>
+                    <p>
+                        The equation above is central to our problem. If you set \(\dot{a}_T\) equal to a scalar \(k\) with units of \(\text{m/s}^3\), you obtain a differential equation whose solution is the \(y = y(x)\) curve. And if you let an object slide down this curve, the equation above says that it will experience a tangential acceleration whose magnitude changes linearly over time per \(a_T(t) = kt + a_0\). In section 5 <a href="numerical-solutions.html">"Numerical Solutions"</a>, we will solve the equation above using a <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods" target="_blank">Runge-Kutta</a> algorithm and create a plot of \(y = y(x)\).
+                    </p>
+                </div>
+            </main>
+            <footer>
+                <address>
+                    © Mateo Patino 2025
+                </address>
+            </footer>
+        </div>
+    </body>
+</html>

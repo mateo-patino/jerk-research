@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Derivation of tangential jerk</title>
+        <link rel="stylesheet" href="styles.css" media="all"> 
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet"> <!--For Open Sans and Roboto-->
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--For LaTeX formatting-->
+    </head>
+    <body id="body-content-page">
+        <div id="sidebar">
+            <h4 id="sidebar-title">Quick Links</h4>
+            <hr id="sidebar-rule">
+            <ol id="sidebar-list">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="constant-jerk-problem.html">The Problem of Constant Jerk</a></li>
+                <li><a href="atdot-derivation.html">Derivation of \( \dot{a}_T \)</a></li>
+                <li><a href="jt-derivation.html">Derivation of \( j_T \)</a></li>
+                <li><a href="numerical-solutions.html">Numerical Solutions</a></li>
+                <li><a href="future-work.html">Future Work</a></li>
+                <li><a href="acknowledgments.html">Acknowledgements</a></li>
+            </ol>
+        </div>
+        <div class="main-container" id="content-page-main-container">
+            <header>
+                <h1>Derivation of \(j_T\)</h1>
+                <div id="index-personal-info">By Mateo Patino
+                <br>
+                Thornton Academy - May 2025
+                </div>
+            </header>
+            <main>
+                <div class="body-container">
+                    <p>
+                        The simplest way to define tangential jerk is as the time derivative of an object's tangential acceleration. But another definition for this concept that is just as valid is as the tangential component of the total jerk vector. Expressing the magnitude of this component in terms of the curve \(y(x)\) is a difficult task, and it is arguably the longest and most difficult math problem I have attempted so far. 
+
+                    <p>
+                        If you choose to delve into our research and do the math by yourself, I have described in detail the steps needed to derive the \(j_T\) differential equation to help you avoid some obstacles. For context, our goal is to write the magnitude of the tangential component of the total jerk in terms of \(y(x)\) and its derivatives because we want a differential equation whose solution is the curve \(y(x)\). This differential equation is a mathematical beast, as it will turn out to be a non-linear higher-order differential equation:
+                        \[
+                            j_T = \frac{-gy''(x)v}{\left( 1 + y'(x)^2 \right)^2} - f \frac{y''(x)^2 v^3}{\left( 1+y'(x)^2 \right)^3}
+                        \]
+                        If you're not planning on delving deep into the math we did, you can simply take a look at the equation above and continue reading about how we <a href="numerical-solutions.html">solved it</a> numerically to find \(y(x)\).
+                    </p>
+                    <h3 id="initial-setup">Initial setup</h3>
+                    <p>
+                        Our curve of interest, \(y(x)\), is a two-dimensional plane curve on which we will place an object and let it slide under the influence of a uniform gravitational field. Hence, only Earth's gravitational force and the normal force from \(y(x)\) will be exerted on the object. Each force can be broken into components along normal and tangential directions, as show below.
+                    </p>
+                    <div class="figure-container">
+                        <img src="images/figures/free-body.png" alt="A free-body diagram of a sliding object on a curved surface" width="369" height="344">
+                        <p class="figure-caption">
+                            Free-body diagram showing the gravitational and contact forces experienced by the object.
+                        </p>
+                    </div>
+                    <p>
+                        We are looking to calculate jerk, so we first need to find the net acceleration vector \(\boldsymbol{\vec{a}}\) in terms of \(y(x)\). Using Newton's Second Law, we can express \(\boldsymbol{\vec{a}}\) in terms of the forces acting on the object,
+                        \[
+                            \boldsymbol{\vec{a}} = \frac {\Sigma \boldsymbol{\vec{F}}}{m} = \frac{1}{m} \left(\boldsymbol{\vec{F}}_N + m \boldsymbol{\vec{g}} \right) = \frac{\boldsymbol{\vec{F}}_N}{m} + \boldsymbol{\vec{g}}
+                        \]
+                    </p>
+                    <p>
+                        By definition, jerk can be calculated as, 
+                        \[
+                            \boldsymbol{\vec{j}} = \frac{d \boldsymbol{\vec{a}}}{dt} = \frac{d}{dt} \left( \frac{\boldsymbol{\vec{F}}_N}{m} + \boldsymbol{\vec{g}} \right) = \frac{1}{m} \frac{d \boldsymbol{\vec{F}}_N }{dt}
+                        \]
+                        Because we are assuming the curve is placed in a uniform gravitational field, the \(\boldsymbol{\vec{g}}\) term will vanish when we take the derivative. Note that the equation above suggests that the total jerk can be expressed solely in terms of the rate of change of the normal force. Hence, we need to rewrite \(\boldsymbol{\vec{F}}_N\) in terms of \(y(x)\), and then proceed to take the derivative.
+                    </p>
+                    <p>
+                        Based on the figure above, we know that the \(\boldsymbol{\vec{F}}_N\) is the sum of the normal component of the gravitational force and the repulsion force exerted by \(y(x)\) on the sliding object, which can be quantified as a speed-dependent centripetal acceleration. Accordingly, we can write the net normal force as,
+                        \[
+                            \boldsymbol{\vec{F}}_N = \left( mg \cos \alpha + \frac{mv^2}{R} \right) \, \boldsymbol{\hat{N}}
+                        \]
+                        where \(\alpha\) is the local angle of \(y(x)\), \(v\) is the instantaneous speed of the object, R is the radius of the <a href="https://en.wikipedia.org/wiki/Osculating_circle">osculating circle</a>, and \(\boldsymbol{\hat{N}}\) is the normal unit vector.
+                    </p>
+                    <p>
+                        It then follows that to find the total jerk, it is sufficient to take the following vector derivative,
+                        \[
+                            \boldsymbol{\vec{j}} = \frac{1}{m} \frac{d \boldsymbol{\vec{F}}_N}{dt} = \frac{d}{dt} \left( \left( g \cos \alpha + \frac{v^2}{R} \right) \, \boldsymbol{\hat{N}} \right)
+                        \]
+                    </p>
+                    <p>
+                        Taking <i>one</i> derivative doesn't sound like a major challenge at first, but it is where the bulk of our work lies.
+                    </p>
+                    <h3 id="derivative-nhat">The time derivative of \(\boldsymbol{\hat{N}}\)</h3>
+                    <p>
+                        \(\boldsymbol{\hat{N}}\) is a variable vector along the curve, so we need to use the product rule to compute the derivative above. When we expand this expression, we will obtain,
+                        \[
+                            \boldsymbol{\vec{j}} = \left( g \cos \alpha + \frac{v^2}{R} \right) \,  \frac{d\boldsymbol{\hat{N}}}{dt} + \frac{d}{dt} \left( g \cos \alpha + \frac{v^2}{R} \right) \, \boldsymbol{\hat{N}}
+                        \]
+                        We will begin the process of re-writing the variables in terms of which \(\boldsymbol{\vec{j}}\) is defined by first re-expressing \(\frac{d\boldsymbol{\hat{N}}}{dt}\) in terms of \(y(x)\). This is a relatively simple task because the normal and tangential unit vectors can be expressed as a function of the <a href="constant-jerk-problem.html#math-atdot-jt">local angle</a> of \(y(x)\),
+                        \[
+                            \boldsymbol{\hat{N}} = -\sin \alpha \, \boldsymbol{\hat{i}} + \cos \alpha \, \boldsymbol{\hat{j}}
+                        \]
+                        \[ 
+                            \boldsymbol{\hat{T}} = \cos \alpha \, \boldsymbol{\hat{i}} + \sin \alpha \, \boldsymbol{\hat{j}}
+                        \]
+                        and likewise, sines and cosines of the local angle can be expressed in terms of \(y'(x)\) via the \(ds\)-\(dy\)-\(dx\) triangle used in the <a href="atdot-derivation.html">derivation of \(\dot{a}_T\)</a>,
+                        \[
+                            \boldsymbol{\hat{N}} = -\sin \alpha \, \boldsymbol{\hat{i}} + \cos \alpha \, \boldsymbol{\hat{j}} = \left( \frac{-y'(x)}{\sqrt{1 + y'(x)^2}} \right) \, \boldsymbol{\hat{i}} + \left( \frac{1}{\sqrt{1 + y'(x)^2}} \right) \, \boldsymbol{\hat{j}}
+                        \]
+                        The time derivative of \(\boldsymbol{\hat{N}}\) now becomes easier to compute, partly because the basis vectors above are constant and only the scalar part needs to be differentiated.
+                        \[
+                            \frac{d\boldsymbol{\hat{N}}}{dt} = \frac{d}{dt} \left( \frac{-y'(x)}{\sqrt{1 + y'(x)^2}} \right) \, \boldsymbol{\hat{i}} + \frac{d}{dt} \left( \frac{1}{\sqrt{1 + y'(x)^2}} \right) \, \boldsymbol{\hat{j}}
+                        \] 
+                        To calculate the derivatives above, we simply need to use basic differentiation rules. The only part of this process that requires more sophisticated problem-solving is the time derivative of \(y'(x)\). To take this deriative, we will need to use the chain rule to write a substitution, 
+                        \[
+                            \frac{dy'(x)}{dt} = \frac{dy'(x)}{dx} \frac{dx}{dt} = y''(x) \dot{x}
+                        \]
+                        \(\dot{x}\) is the horizontal component of velocity \(v_x = v \, \cos \alpha \). Luckily, \(\cos \alpha \) can be written in terms of \(y'(x)\) as shown above, and the instantaneous speed \(v\) is a function of the vertical drop \(\Delta y\) of the object along the curve and depends on the object's initial \(y\)-position and speed \(v_0\), 
+                        \[
+                            v = \sqrt{ v^2_0 + 2g \Delta y} = \sqrt{ v^2_0 + 2g(y_0 - y(x))}
+                        \]
+                        Hence, the overall expression for the time derivative of \(y'(x)\) becomes,
+                        \[
+                            \frac{dy'(x)}{dt} = y''(x) v \cos \alpha = \frac{y''(x) \sqrt{ v^2_0 + 2g(y_0 - y(x))}}{\sqrt{1 + y'(x)^2}}
+                        \]
+                        For simplicity, we will continue to write the instantaneous speed of the object as \(v\) throughout this research, even though it could technically be written in a expanded form in terms of \(y(x)\). Hence, the substitution that we shall use for the time derivative of \(y'(x)\) is,
+                        \[
+                            \frac{dy'(x)}{dt} = \frac{y''(x)v}{\sqrt{1 + y'(x)^2}}
+                        \]
+                        After wading through the alegbra to differentiate both components of \(\boldsymbol{\hat{N}}\)and making the substitution above, you should obtain the expression,
+                        \[
+                            \frac{d\boldsymbol{\hat{N}}}{dt} = \left( \frac{-y''(x)v}{\left( 1 + y'(x)^2 \right)^2 } \right) \, \boldsymbol{\hat{i}} + \left( \frac{-y'(x)y''(x)v}{\left( 1 + y'(x)^2 \right)^2} \right) \, \boldsymbol{\hat{j}}
+                        \]
+                    </p>
+                    <p>
+                        This expression is correct, but it is not useful to us because it will introduce terms in a \(\boldsymbol{\hat{i}}\)-\(\boldsymbol{\hat{j}}\) basis when we substitute it back into the equation for \(\boldsymbol{\vec{j}}\), which is in a tangential-normal basis. Hence, we need a way to transform the expression into a \(\boldsymbol{\hat{T}}\)-\(\boldsymbol{\hat{N}}\) basis. This sounds like a difficult task that could be approached with matrices and coordinate system transformations, but there is a much simpler approach that avoids these techniques.
+                    </p>
+                    <p>
+                        First, note that both components of \(\frac{d\boldsymbol{\hat{N}}}{dt}\) share multiple common factors. Both contain \(y''(x)\), \(v\), and \( \left(1 + y'(x)^2\right)^2 \) in either the numerator or denominator. We can exploit these similarities to factor out a specific expression that will yield a wonderfully simple result. In particular, we will pull out the quantity,
+                        \[
+                            \frac{-y''(x)v}{\left( 1 + y'(x)^2 \right)^\frac{3}{2}}
+                        \]
+                        from both components of our expression for \(\frac{d\boldsymbol{\hat{N}}}{dt}\). This factoring will give us the following product,
+                        \[
+                            \frac{d\boldsymbol{\hat{N}}}{dt} = \frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \, \left( \frac{1}{\sqrt{1 + y'(x)^2}} \, \boldsymbol{\hat{i}} + \frac{y'(x)}{\sqrt{1 + y'(x)^2}} \, \boldsymbol{\hat{j}} \right)
+                        \]
+                    </p>
+                    <p>
+                        Take a hard look at the scalar quantities in front of each basis vector in the expression above. These expressions are exactly equal to \(\cos \alpha \) and \(\sin \alpha\), respectively. This is a wonderful surprise because it means that we can write the time derivative of the normal unit vector as,
+                        \[
+                            \frac{d\boldsymbol{\hat{N}}}{dt} = \frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \, \left( \cos \alpha \, \boldsymbol{\hat{i}} + \sin \alpha \, \boldsymbol{\hat{j}} \right)
+                        \]
+                        And if you remember correctly, we previously defined \(\cos \alpha \, \boldsymbol{\hat{i}} + \sin \alpha \, \boldsymbol{\hat{j}}\) to be the tangential unit vector! For this reason, the time derivative simplifies into a very clean form,
+                        \[
+                            \frac{d\boldsymbol{\hat{N}}}{dt} = \frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \, \boldsymbol{\hat{T}}
+                        \]
+                     </p>
+                     <h3 id="jerk-components">The components of jerk</h3>
+                     <p>
+                        We went on this mission to calculate \(\frac{d\boldsymbol{\hat{N}}}{dt}\) because we needed to substitute it by another expression on the equation,
+                        \[
+                            \boldsymbol{\vec{j}} = \left( g \cos \alpha + \frac{v^2}{R} \right) \,  \frac{d\boldsymbol{\hat{N}}}{dt} + \frac{d}{dt} \left( g \cos \alpha + \frac{v^2}{R} \right) \, \boldsymbol{\hat{N}}
+                        \]
+                        Now we have the perfect substitution for \(\frac{d\boldsymbol{\hat{N}}}{dt}\). When we apply it to the equation above, we will obtain,
+                        \[
+                            \boldsymbol{\vec{j}} = \left( g \cos \alpha + \frac{v^2}{R} \right) \left(\frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \right) \, \boldsymbol{\hat{T}} + \frac{d}{dt} \left( g \cos \alpha + \frac{v^2}{R} \right) \, \boldsymbol{\hat{N}}
+                        \]
+                        and since we recently built an equation for \(\cos \alpha\) in terms of \(y(x)\), we can expand the equation above even further,
+                        \[
+                            \boldsymbol{\vec{j}} = \left( \frac{g}{\sqrt{1 + y'(x)^2}} + \frac{v^2}{R} \right) \left(\frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \right) \, \boldsymbol{\hat{T}} + \frac{d}{dt} \left( \frac{g}{\sqrt{1 + y'(x)^2}} + \frac{v^2}{R} \right) \, \boldsymbol{\hat{N}}
+                        \]
+                        This equation represents our progress in calculating the tangential component of jerk in terms \(y(x)\) in a tangential-normal basis so far. It is a very busy equation, so let's take a moment to parse it carefully. On the left side, we have the tangential component of the total jerk. The expression in front of \(\boldsymbol{\hat{T}}\) is a scalar quantity, so it <i>represents the magnitude of tangential jerk!</i> On the right side, we have the normal component of jerk, and the expression in front of \(\boldsymbol{\hat{N}}\) is the magnitude of this component as well.
+                     </p>
+                     <p>
+                        Our research is only focused on the tangential dimension of jerk, so we will ignore the normal component of the equation above and devote our full attention to the tangential component. For this reason, I will not describe the steps for taking the derivative in front of \(\boldsymbol{\hat{N}}\),
+                        \[
+                            \frac{d}{dt} \left( \frac{g}{\sqrt{1 + y'(x)^2}} + \frac{v^2}{R} \right)
+                        \]
+                        Such process is extremely long and cumbersome, and the resulting expression, which would represent the magnitude of the normal component of \(\boldsymbol{\vec{j}}\), is the longest mathematical expression I have ever handled. It barely fitted inside the margins of our research paper, and it will not fit in this website if I write it out. If you're brave and you wish to see this mathematical monster, go to the bottom of page 5 of our <a href="files/first-paper.pdf">paper</a>.
+                     </p>
+                     <p>
+                        As mentioned before, the equation for \(\boldsymbol{\vec{j}}\) above is telling us what the magnitude of the tangential jerk \(j_T\) is! This great news because it means that we're getting closer to the end of the derivation and that we can abandon vector math and deal with scalars only from here on. Currently, the magnitude of the tangential jerk is,
+                        \[
+                            j_T = \left( \frac{g}{\sqrt{1 + y'(x)^2}} + \frac{v^2}{R} \right) \left(\frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \right)
+                        \]
+                        which is a correct but unusable equation for our purposes. The problem lies in the radius of the osculating circle \(R\), which is not in terms of \(y(x)\) and its derivatives. Hence, our task now is to link \(R\) to the curve \(y(x)\).
+                     </p>
+                     <h3 id="radius">The radius of the osculating circle</h3>
+                     <p>
+                        To derive an expression for \( R \) in terms of \(y(x)\) , we first need to discuss the concept of curvature. Curvature is often denoted by \(\kappa\), and it measures how sharply a curve is turning at a specific point. Hence, curvature is often defined as a function of the distance \(s\)  an object has traveled from the origin. The best way to measure how aggressively a curve turns is to observe the rate at which the tangential unit vector changes its direction. This is expressed by the derivative,
+                        \[
+                            \frac{d\boldsymbol{\hat{T}}}{ds}
+                        \]
+                        which tells us how the direction of motion shifts as we take a small step forward or backward along the curve. Since \(\boldsymbol{\hat{T}}\) always has unit length, any change reflects a pure change in direction. If the curve is bending sharply, even a tiny step \(ds\) causes a noticeable rotation in \(\boldsymbol{\hat{T}}\), indicating high curvature \(\kappa\). If the curve is nearly straight, a step along the path causes little to no change in direction, and \(\kappa\) is small.
+                     </p>
+                     <p>
+                        For this reason, the curvature at any given point of our surface \(y(x)\) can be described by \(\kappa\), which is defined as,
+                        \[
+                            \kappa = \left\lVert \frac{d\boldsymbol{\hat{T}}}{ds} \right\rVert
+                        \]
+                        where the double bars represent the norm (magnitude) of the vector derivative.
+                     </p>
+                     <p>
+                        The concept of curvature is profoundly connected to osculating circles. For every curve, you can pick a point and draw a circle with an arc section that is tangent to the curve at that point. The radius of this tangent circle will be inversely proportional to the curvature at that specific point because if the curve turns sharply, you will need a circle that also turns more aggressively (and hence has a smaller \(R\)) and viceversa. To illustrate this concept, the animation below depicts an osculating circle whose radius varies as the contact point with the curve slides.
+                     </p>
+                     <div class="figure-container">
+                        <img src="images/figures/osculating-circle.gif" alt="A curve with a variable osculating circle at many points along the curve" width="274" height="287">
+                        <p class="figure-caption">
+                            The osculating circle approximates the curve near the point of contact, imitating its curvature.
+                        </p>
+                     </div>
+                     <p>
+                        Note that the radius of the osculating circle becomes smaller when the curve is turning faster and larger when the curve becomes flatter. Because of this relationship between \(R\) and \(\kappa\), we can expect an equation that relates these two variables to exist and to be fairly simple. And indeed, it is fairly straightforward to rewrite \(\kappa\) in terms of \(R\). 
+                     </p>
+                     <p>
+                        First, we will use the chain rule to express \(\kappa\) in terms of two derivatives instead of just one,
+                        \[
+                            \kappa = \left\lVert \frac{d\boldsymbol{\hat{T}}}{ds} \right\rVert = \left\lVert \frac{d\boldsymbol{\hat{T}}}{d\theta} \frac{d\theta}{ds} \right\rVert
+                        \]
+                        In this context, \(\theta\) represents the angle spanned by an arc of length \(s\) of the osculating circle, as shown below.
+                     </p>
+                     <div class="figure-container">
+                        <img src="images/figures/arc.png" alt="An osculating circle with arc of length s and angle theta" width="350">
+                        <p class="figure-caption">
+                            An osculating circle whose arc of length \(s\) and angle \(\theta\) is tangent to \(y(x)\) at \(P\).
+                        </p>
+                    </div>
+                    <p>
+                        Hence, we can establish the following trivial relationship between \(\theta\) and \(s\) and use it to find \(\frac{d\theta}{ds}\),
+                        \[
+                            s = R \theta \iff ds = R d\theta \iff \frac{d\theta}{ds} = \frac{1}{R}
+                        \]
+                        We will now substitute this expression for \(\frac{d\theta}{ds}\) into our equation for \(\kappa\), which will give us,
+                        \[
+                            \kappa = \left\lVert \frac{d\boldsymbol{\hat{T}}}{d\theta} \frac{d\theta}{ds} \right\rVert = \left\lVert \frac{d\boldsymbol{\hat{T}}}{d\theta} \frac{1}{R} \right\rVert
+                        \]
+                        If we take a careful look at the equation above, we will see that \(\kappa\) is indeed inversely proportional to \(R\) by a factor of,
+                        \[
+                            \left\lVert \frac{d\boldsymbol{\hat{T}}}{d\theta} \right\rVert
+                        \]
+                        But it turns out that this factor is equal to 1. This factor is the derivative of \(\boldsymbol{\hat{T}}\) with respect to the angle spanned by an arc of the osculating circle. For an infinitesimally small angle \(d\theta\), the tangential unit vector can be considered to be traveling along a circular arc and not along \(y(x)\) because the the osculating circle mirrors the local curvature of \(y(x)\). Hence, if \(\boldsymbol{\hat{T}}\) is traveling along a circular path, every additional degree that its arc spans will change the direction of \(\boldsymbol{\hat{T}}\) by the same amount because a circle's curvature is uniform. In other words, every increase or decrease in the spanned angle of magnitude \(d\theta\) will change \(\boldsymbol{\hat{T}}\)'s direction by an amount \(d\boldsymbol{\hat{T}}\) of the same magnitude.
+                    </p>
+                    <p>
+                        Therefore, the equation for the curvature of \(y(x)\) resolves into,
+                        \[
+                            \kappa = \frac{1}{R} = \left\lVert \frac{d\boldsymbol{\hat{T}}}{ds} \right\rVert
+                        \]
+                    </p>
+                    <p>
+                        Let's recall our original problem. We have an expression for the tangential jerk in which the reciprocal of the radius of the osculating circle needs to be replaced by a valid expression,
+                        \[
+                            j_T = \left( \frac{g}{\sqrt{1 + y'(x)^2}} + \frac{v^2}{R} \right) \left(\frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \right)
+                        \]
+                        With the equation linking \(\boldsymbol{\hat{T}}\) and \(R\) together, 
+                        \[
+                            \frac{1}{R} = \left\lVert \frac{d\boldsymbol{\hat{T}}}{ds} \right\rVert
+                        \]
+                        we can finally find a subsitution for \(R\) in terms of \(y(x)\). However, differentiating the tangential unit vector with respect to \(s\) is very difficult and impractical. It would be much more convenient to differentiate this vector with respect to time, and we can do just that using the chain rule. First, we'll write the time derivative of the tangential unit vector expressed as the product of two derivatives (one which will resolve into speed),
+                        \[
+                            \frac{d\boldsymbol{\hat{T}}}{dt} = \frac{d\boldsymbol{\hat{T}}}{ds} \frac{ds}{dt} = \frac{d\boldsymbol{\hat{T}}}{ds} v
+                        \]
+                        We can divide both sides of the equation above to obtain an expression for the derivative of \(\boldsymbol{\hat{T}}\)with respect to \(s\) in terms of time and speed,
+                        \[
+                            \frac{d\boldsymbol{\hat{T}}}{ds} = \frac{1}{v} \frac{d\boldsymbol{\hat{T}}}{dt}
+                        \]
+                        Accordingly, our past expression for the reciprocal of \(R\) becomes,
+                        \[
+                            \frac{1}{R} = \left\lVert \frac{d\boldsymbol{\hat{T}}}{ds} \right\rVert = \frac{1}{v} \left\lVert \frac{d\boldsymbol{\hat{T}}}{dt} \right\rVert
+                        \]
+                        which is a wonderful result because the calculating the time derivative of the tangential unit vector is certainly within our reach.
+                    </p>
+                    <h3 id="derivative-that">The time derivative of \(\boldsymbol{\hat{T}}\)</h3>
+                    <p>
+                        We will use an approach that mirrors what we did to calculate the time derivative of \(\boldsymbol{\hat{N}}\) a while ago. First, recall that the tangential unit vector can be written in terms of trigonometric functions of the local angle \(\alpha\),
+                        \[
+                            \boldsymbol{\hat{T}} = \cos \alpha \, \boldsymbol{\hat{i}} + \sin \alpha \, \boldsymbol{\hat{j}}
+                        \]
+                        Therefore, we can express the reciprocal of \(R\) as,
+                        \[
+                            \frac{1}{R} = \frac{1}{v} \left\lVert \frac{d\boldsymbol{\hat{T}}}{dt} \right\rVert = \frac{1}{v} \left\lVert \frac{d}{dt} \left( \cos \alpha \, \boldsymbol{\hat{i}} + \sin \alpha \, \boldsymbol{\hat{j}} \right) \right\rVert
+                        \]
+                        We already differentiated \(\sin \alpha\) and \(\cos \alpha\) in terms of \(y(x)\) when we calculated the time derivative of \(\boldsymbol{\hat{N}}\), so we can plug those results in to obtain,
+                        \[
+                            \frac{1}{R} = \frac{1}{v} \, \left\lVert \, \frac{-y'(x)y''(x)v}{\left( 1 + y'(x)^2 \right)^2} \, \boldsymbol{\hat{i}} \, + \, \frac{y''(x)v}{\left( 1 + y'(x)^2 \right)^2} \, \boldsymbol{\hat{j}} \, \right\rVert
+                        \]
+                        We can simplify the vector part of the equation above by squaring the magnitude of each component and taking the square root to compute the norm. The expressions you get by doing this appear to be long, but simplifying them is surprisingly easy.
+                        \[
+                            \left\lVert \frac{-y'(x)y''(x)v}{\left( 1 + y'(x)^2 \right)^2} \, \boldsymbol{\hat{i}} \, + \, \frac{y''(x)v}{\left( 1 + y'(x)^2 \right)^2} \, \boldsymbol{\hat{j}} \right\rVert = \sqrt{ \frac{ \left( y'(x)y''(x)v \right)^2 }{\left( 1 + y'(x)^2 \right)^4} + \frac{\left( y''(x)v \right)^2}{\left( 1 + y'(x)^2 \right)^4} }
+                        \]
+                    </p>
+                    <p>
+                        Combining the denominators and factoring out \(y''(x)v\) from the numerator gives,
+                        \[
+                            \sqrt{ \frac{\left(y''(x)v\right)^2 \left(1 + y'(x)^2 \right)}{\left( 1 + y'(x)^2 \right)^4} } = \frac{y''(x)v}{\left( 1 + y'(x)^2 \right)^{\frac{3}{2}}}
+                        \]
+                    </p>
+                    <p>
+                        Substituting this expression back into our equation for the reciprocal of \(R\) and canceling out the common \(v\) factors will yield,
+                        \[
+                            \frac{1}{R} =  \frac{y''(x)}{\left( 1 + y'(x)^2 \right)^{\frac{3}{2}} }
+                        \]
+                        This is finally the result we were looking for: an equation for the reciprocal of \(R\) in terms of the derivatives of \(y(x)\). We can proceed to substitute this expression into our equation for \(j_T\) after making one small adjustment.
+                    </p>
+                    <p>
+                        We need a way to manually account for the sign of \(R\) because the equation above does not convey information about the direction of the curvature. The sign of \(R\) will depend on whether \(y(x)\) is concave up or concave down. In turn, the concavity of \(y(x)\) is solely determined by the sign of the constant value of tangential jerk that we pick when we simulate the curve numerically, so the sign of R is dependent on the sign of \(j_T\). In our paper, we introduced a dummy variable \(f\) that takes value of either \(+1\) or \(-1\) to account for the concavity of the curve. 
+                    </p>
+                    <p>
+                        To incorporate this variable, we took the absolute value of the reciprocal of \(R\) to represent its magnitude and then multiplied it by \(f\) to indicate its sign. The resulting expression looks like this,
+                        \[
+                            \frac{1}{R} = f \left| \frac{y''(x)}{\left( 1 + y'(x)^2 \right)^{\frac{3}{2}} } \right|
+                        \]
+                        and we can now plug it into our last equation for \(j_T\),
+                        \[
+                            j_T = \left( \frac{g}{\sqrt{1 + y'(x)^2}} + \frac{v^2}{R} \right) \left(\frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \right)
+                        \]
+                        to obtain,
+                        \[
+                            j_T = \left( \frac{g}{\sqrt{1 + y'(x)^2}} + f v^2 \left| \frac{y''(x)}{\left( 1 + y'(x)^2 \right)^{\frac{3}{2}} } \right|\right) \left(\frac{-y''(x)v}{\left(1 + y'(x)^2\right)^\frac{3}{2}} \right)
+                        \]
+                    </p>
+                    <p>
+                        To write \(j_T\) in the same form that we displayed it on our paper, we can distribute the common factor into each term, ignoring the absolute value as the resulting product will be positive in all cases. This will enable us to finally attain our goal of deriving an expression for the magnitude of the tangential component of jerk in the form of a differential equation in terms of \(y(x)\):
+                        \[
+                            j_T = \frac{ -g y''(x)v}{\left(1 + y'(x)^2 \right)^2} - \frac{f y''(x)^2 v^3}{\left( 1 + y'(x)^2 \right)^3}
+                        \]
+                    </p>
+                    <p>
+                        The equation above is one of the two most important equations in our research along with the equation for <a href="atdot-derivation.html">\(\dot{a}_T\)</a>, so let's take a moment to interpret it.
+                    </p>
+                    <p>
+                        In our research, Dr. Nash and I wanted to find a curve \(y(x)\) on which the magnitude of the tangential component of the jerk experienced by an object sliding on \(y(x)\) would be constant. This magnitude is represented by \(j_T\), which is related to \(y(x)\) and its derivatives through the equation above. To find a \(y(x)\) solution to this equation, we first let \(j_T\) be equal to constant scalar value \(k\) with units of \(\text{m/s}^3\). Depending on the sign of \(k\), the value of the \(f\) factor will change. We then proceed to run a <a href="numerical-solutions.html#rk4-algorithm" target="_blank">4th-order Runge-Kutta</a> algorithm on the resulting differential equation and plot the <a href="numerical-solutions.html#numerical-results">solutions</a>.
+                    </p>
+                </div>
+            </main>
+            <footer>
+                <address>
+                    © Mateo Patino 2025
+                </address>
+            </footer>
+        </div>
+    </body>
+</html>

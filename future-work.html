@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Future Work</title>
+        <link rel="stylesheet" href="styles.css" media="all"> 
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet"> <!--For Open Sans and Roboto-->
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--For LaTeX formatting-->
+    </head>
+    <body id="body-content-page">
+        <div id="sidebar">
+            <h4 id="sidebar-title">Quick Links</h4>
+            <hr id="sidebar-rule">
+            <ol id="sidebar-list">
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="constant-jerk-problem.html">The Problem of Constant Jerk</a></li>
+                <li><a href="atdot-derivation.html">Derivation of \( \dot{a}_T \)</a></li>
+                <li><a href="jt-derivation.html">Derivation of \( j_T \)</a></li>
+                <li><a href="numerical-solutions.html">Numerical Solutions</a></li>
+                <li><a href="future-work.html">Future Work</a></li>
+                <li><a href="acknowledgments.html">Acknowledgements</a></li>
+            </ol>
+        </div>
+        <div class="main-container" id="content-page-main-container">
+            <header>
+                <h1>Future Work & Unsolved Mysteries</h1>
+                <div id="index-personal-info">By Mateo Patino
+                <br>
+                Thornton Academy - May 2025
+                </div>
+            </header>
+            <main>
+                <div class="body-container">
+                    <p>
+                        Dr. Nash and I have spent more than a year and a half working on and writing about this problem of constant jerk. We are proud of the advances we have made, and after spending hundreds of hours thinking about this problem, we see multiple ways in which it could be approached and studied differently. And we also see various places where a question or mathematical mystery remains unsolved. 
+                    </p>
+                    <p>
+                        I will continue pondering over this problem in the upcoming months as I begin college, and so will Dr. Nash as he continues to teach. But we hope other people will be inspired to pick up this problem and attempt it on their own, as countless hours of research can continue to be poured into it. For this reason, we have compiled a series of ideas, questions, and opportunities for attacking the problem of constant jerk in ways that Dr. Nash and I have not yet tried.
+                    </p>
+                    <p>
+                        Feel free to contact either one of us to show us your progress or ask for help. We will try our best to help you tackle this problem in your own way, and we are excited to see your results!
+                    </p>
+                    <h3>1. Constant normal jerk</h3>
+                    <p>
+                        Dr. Nash and I researched motion defined by a constant tangential jerk, but there is nothing stopping you from looking at normal jerk. It looks like all the questions we asked in the context of tangential jerk can be re-expressed in the context of normal jerk. For example, you can ask for a curve \(y(x)\) on which the normal acceleration of an object increases linearly over time—namely, \(\dot{a}_N\) is constant. You could also ask for a curve on which the normal component of jerk \(j_N\) is constant. 
+                    </p>
+                    <p>
+                        We have not rigorously checked if \(\dot{a}_N\) and \(j_N\) are different physical and mathematical quantities in the same way \(\dot{a}_T\) and \(j_T\) are. However, we suspect this distinction exists for jerk along the normal direction of motion because \(\dot{a}_N\) has a more trivial relationship to \(y(x)\) than \(j_N\).
+                    </p>
+                    <p>
+                        If you wish to delve into constant normal jerk, I would suggest you begin by deriving an expression for \(\dot{a}_N\) in terms of \(y(x)\). This is significantly easier than deriving \(j_N\) in terms of \(y(x)\), which we already did in <a href="files/first-paper.pdf">page 5 of our paper</a>. 
+                    </p>
+                    <p>
+                        To derive \(\dot{a}_N\), you will need to differentiate the normal acceleration of the object,
+                        \[
+                            a_N = g \cos \alpha + \frac{v^2}{R}
+                        \]
+                        To differentiate the equation above with respect to time, you will likely need to resort to a few substitutions and chain rule tricks which have been discussed and applied to different scenarios in our research <a href="jt-derivation.html">here</a>, <a href="jt-derivation.html#derivative-nhat">here</a>, and <a href="jt-derivation.html#radius">here too</a>.
+                    </p>
+                    <h3>2. Lagrangian & Hamiltonian Mechanics</h3>
+                    <p>
+                        We relied on Newtonian mechanics to derive the equations in our research and ultimately solve for \(y(x)\). However, it is conventional to use Lagrangian or Hamiltonian mechanics to approach physics problems about optimizing or constraining a quantity along a trajectory. 
+                    </p>
+                    <p>
+                        To give you a starting point with this new approach, let's consider how we could express the time derivative of the tangential acceleration in Lagrangian mechanics. First, let's assume that the object slides along a curve in 2D space parameterized by arc length \(s\) with position \( \boldsymbol{\vec{r}}(s) = \langle x(s), y(s) \rangle\). Then, the velocity can be expressed as the unit tangent vector scaled by the instantaneous speed,
+                        \[  
+                            \boldsymbol{\vec{v}} = \frac{d\boldsymbol{\vec{r}}}{dt} = \frac{ds}{dt} \frac{d\boldsymbol{\vec{r}}}{ds} = \dot{s} \, \boldsymbol{\hat{T}}
+                        \]
+                        Per this definition, the magnitude of the velocity is denoted by \(\dot{s}\), so the tangential acceleration \(a_T\) will be the rate of change of this magnitude,
+                        \[
+                            a_T = \frac{d \left| \boldsymbol{\vec{v}} \right|}{dt} = \frac{d \dot{s}}{dt} = \ddot{s}
+                        \]
+                        In the context of this problem, we're constraining \(\ddot{s}\) to behave as a linear function of time with a slope \(k\) that represents a constant value of tangential jerk. Namely, we want our system to satisfy the equation,
+                        \[
+                            \ddot{s} = kt
+                        \]
+                    </p>
+                    <p>
+                        Because the equation above is in terms of \(s\), we'll want to write the Lagrangian in terms of \(s\) and its time derivatives too. This is a fairly trivial task, considering that speed is denoted by \(\dot{s}\) and that the potential energy is a function of the \(y\)-coordinate of the object,
+                        \[
+                            \mathcal{L} = T - V = \frac{1}{2} m \dot{s}^2 - mgy(s) 
+                        \]
+                    </p>
+                    <p>
+                        Writing the Euler-Lagrange equation for this system is slightly more tricky. If we let the right-hand side of Euler-Lagrange equation be zero, our system won't satisfy \(\ddot{s} = kt\), indicating that constant-jerk motion cannot occur purely under conservative force fields. Hence, we need to introduce a generalized force \(Q_s\),
+                        \[
+                            \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{s}} \right) - \frac{\partial \mathcal{L}}{\partial s} = Q_s
+                        \]
+                    </p>
+                    <p>
+                        In Lagrangian mechanics, \(Q_s\) represents the total non-conservative generalized force acting along the path defined by s, the arc length. This includes any force that causes tangential acceleration but is not derived from a potential energy function.
+                    </p>
+                    <p>
+                        In our case, we are defining a linearly variable tangential acceleration \(\ddot{s} = kt\), and Newton's Second Law states that the net tangential force required to produce this force is,
+                        \[
+                            F_T = Q_s = m\ddot{s} = mkt
+                        \]
+                        We can substitute this expression for \(Q_s\) into the Euler-Lagrange equation. And once we compute the time derivatives and partial derivatives, we should obtain the result,
+                        \[
+                            m \ddot{s} + mg \frac{dy}{ds} = mkt
+                        \]
+                        And dividing both sides by \(m\) would yield the governing differential equation for the system,
+                        \[
+                            \ddot{s} + g \frac{dy}{ds} = kt
+                        \]
+                    </p>
+                    <p>
+                        This is the central equation that must be solved to find a frictionless curve on which the tangential acceleration of a sliding object changes linearly over time. This is by far not a trivial differential equation and solving it and reconstructing \( \boldsymbol{\vec{r}} (x(s), y(s)) \) from your results will be the bulk of your work if you decide to take on this problem.
+                    </p>
+                    <h3>3. Brute force</h3>
+                    <p>
+                        After the American Journal of Physics reviewed our paper and said that our numerical solution for \(y(x)\) was "uninteresting," Dr. Nash and I set the goal of finding an analytical curve that exhibits either constant-\(\dot{a}_T\) or constant-\(j_T\) properties. Typically, we would've searched for an analytical expression for \(y(x)\) by solving the differential equations of \(\dot{a}_T\) and \(j_T\) by hand, but they are far too complex, so we needed a different method for finding analytical solutions.
+                    <p>
+                        We ultimately decided to use a brute-force approach. We went on the internet and searched for famous analytical curves studied by mathematicians in the past and recorded the parametric and algebraic definitions for dozens of them. We then wrote a computer program that used these definitions to check whether a given curve possessed a constant \(\dot{a}_T\). We checked for this property by looking at an interesting constraint that all constant-\(\dot{a}_T\) curves have.
+                    </p>
+                    <p>
+                        Recall that \(a_T\) can be written as,
+                        \[
+                            a_T = g \sin \alpha 
+                        \]
+                        and that "constant-\(\dot{a}_T\)" implies that \(a_T\) is a linear function of time in our system and must satisfy,
+                         \[
+                            a_T = \dot{a}_T \, t + a_0
+                        \]
+                        Hence, it is also true that the following equation must be satisfied,
+                        \[
+                            g \sin \alpha = \dot{a}_T \, t + a_0
+                        \]
+                        If we divide across by \(g\), we will obtain an equation that tells us the relationship between \(\sin \alpha\) and time in our constant-\(\dot{a}_T\) system,
+                        \[
+                            \sin \alpha = \frac{\dot{a}_T}{g} \, t + \frac{a_0}{g}
+                        \]
+                        When Dr. Nash and I arrived at this equation, it became clear that all constant-\(\dot{a}_T\) curves possess a sine of the local angle that changes linearly as a function of time. This characteristic is entirely equivalent to having a tangential acceleration that varies linearly over time. It is this property about \(\sin \alpha \) and time that served as the criteria in our computer program for determining whether an analytical curve has constant \(\dot{a}_T\) or not. 
+                    </p>
+                    <p>
+                        The greatest advantage of this method is that calculating \(\sin \alpha\) with a computer is very easy for any curve with a known \( (x(t), y(t)) \) parametrization because the parametrization enables you to create an array of discrete \(x\) and \(y\) values. And using these arrays and the definition of \(\sin \alpha\) per a <a href="atdot-derivation.html">\(ds\)-\(dy\)-\(dx\)</a> triangle, we can calculate the \(i\)-th value in an array of \(\sin \alpha \) values using discrete differences in \(x(t)\) and \(y(t)\):
+                        \[
+                            \sin \alpha = \frac{dy}{\sqrt{dx^2 + dy^2}} \iff \left( \sin \alpha \right)_i \approx \frac{\Delta y_i}{\sqrt{\Delta x_i^2 + \Delta y_i^2}}
+                        \]
+                    </p>
+                    <p>
+                        The latest work we have done in this research is to execute these calculations and generate a plot of \(\sin \alpha \) against time for every analytic curve with a known parametrization. However, we haven't had much luck, as we have yet to find a plot that is linear. There are dozens of curves that we have yet not tried, though, so if you want to contribute toward this search of analytical solution, you should consider looking at curve repositories online, compiling the definitions of as many curves as you can find, and checking for constant-jerk properties by looking for linearity in a \( \sin \alpha \)-time plot. 
+                    </p>
+                    <p>
+                        I would especially recommend this route if you wish to avoid engaging in advanced mathematics by hand and prefer to write computer code. As long as you can hard-code a mathematical expression into a script and create a plot, you will likely be able to produce meaningful results and confidently assess the constant-jerk properties of a curve.
+                    </p>
+                    <h3>4. Polar Coordinates</h3>
+                    <p>
+                        If you visit the derivations of <a href="atdot-derivation.html">\(\dot{a}_T\)</a> and <a href="jt-derivation.html">\(j_T\)</a>, you will notice that our mathematics only describe tangential jerk motion in cartesian coordinates. Nevertheless, it is entirely possible to switch into a different coordinate sytem and re-express our problem in it.
+                    </p>
+                    <p>
+                        One interesting and promising alternative that you might want explore and that Dr. Nash and I briefly studied was polar coordinates. We assumed our curved surface was now a parametrization of the form \(\boldsymbol{\vec{r}}(r(t), \theta(t))\) and that the position vector of our object was given by,
+                        \[
+                            \boldsymbol{\vec{r}} = r \, \boldsymbol{\hat{r}}
+                        \]
+                        We proceeded to write the net acceleration vector in terms of basis vectors \(\boldsymbol{\hat{r}}\) and \(\boldsymbol{\hat{\theta}}\) by differentiating the equation above twice,
+                        \[
+                            \boldsymbol{\vec{a}} = \frac{d^2 \boldsymbol{\vec{r}}}{dt^2} = \left( \ddot{r} - r \dot{\theta}^2 \right) \, \boldsymbol{\hat{r}} + \left( 2 \dot{r} \dot{\theta} + r \ddot{\theta}^2 \right) \, \boldsymbol{\hat{\theta}}
+                        \]
+                        (if you want to see the derivation of \(\boldsymbol{\vec{a}}\) above, I uploaded a YouTube <a href="https://www.youtube.com/watch?v=duqBW2wBOFQ">video</a> walking you through it).
+                    </p>
+                    <p>
+                        In polar coordinates, \( \boldsymbol{\hat{r}} \) points in the radial direction of the object's trajectory, also known as the centripetal or normal direction. \( \boldsymbol{\hat{\theta}} \) points in the tangential direction of motion, as it indicates the direction of the fastest increase or decrease in \(\theta\), the angle \( \boldsymbol{\vec{r}} \) makes with the horizontal axis. Therefore, the scalar quantity in front of \( \boldsymbol{\hat{\theta}} \) represents the tangential acceleration \(a_\theta \), which we previously denoted by \(a_T\),
+                        \[
+                            a_\theta  = 2 \dot{r} \dot{\theta} + r \ddot{\theta}^2 
+                        \]
+                    </p>
+                    <p>
+                        Accordingly, a curve on which the magnitude of the tangential acceleration changes linearly over time in polar coordinates is a constant-\(\dot{a}_\theta \) curve. To create a differential equation for \(\dot{a}_\theta \) in terms \(r\), \(\theta\), and their derivatives, you can differentiate the equation above with respect to time using the chain and product rules. After combining like terms, you will have,
+                        \[
+                            \dot{a}_\theta = r \dddot{\theta} + 2 \ddot{r} \dot{\theta} + 3 \dot{r} \ddot{\theta}
+                        \]
+                        To have a system with a tangential acceleration that changes linearly over time, we need two functions \(r(t)\) and \(\theta(t)\) that satisfy the differential equation above for a constant scalar value of \(\dot{a}_\theta \). Solving this equation—or deriving a simpler equation that is mathematically equivalent—would the be the central and most difficult part of this problem.
+                    </p>
+                    <p>
+                        Dr. Nash and I did not venture beyond deriving this differential equation for \(\dot{a}_\theta\), so we don't know where to move on from here. However, if you need some encouragement to pick up where we left, let us point out that this differential equation has some interesting features that might suggest it is solvable. First, notice that the sum of the orders of the derivatives elegantly add up to \(3\) in each term. Second, it is surprising that the coefficients of each term are \(1\), \(2\), and \(3\), respectively. And to top it all off, the equation contains \(3\) derivatives of \(r\) and \(\theta\) in consecutive order. The derivatives of \(r\) start at the \(0\text{th}\) order and go up to the \(2\text{nd}\) order, and the derivatives of \(\theta\) begin at the \(1\text{st}\) and go up to the \(3\text{rd}\) order.
+                    </p>
+                    <p>
+                        If you've handled series and infinite sums before, you know that these patterns don't seem coincidental. Your mathematical instinct is likely telling you that the differential equation for \(\dot{a}_\theta\) is secretly a sum with an underlying mechanism, and uncovering this mechanism would potentially make solving the equation a lot easier. If you decide to delve into this problem in polar coordinates, we recommend you take a hard look into whether the \(\dot{a}_\theta\) differential equation can be expressed as series, and if it is, exploit that to your advantage.
+                    </p>
+                </div>
+            </main>
+            <footer>
+                <address>
+                    © Mateo Patino 2025
+                </address>
+            </footer>
+        </div>
+    </body>
+</html>
